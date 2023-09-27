@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# ecommerce demo application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## VS Code extensions
 
-## Available Scripts
+- https://marketplace.visualstudio.com/items?itemName=steoates.autoimport
+- https://marketplace.visualstudio.com/items?itemName=NuclleaR.vscode-extension-auto-import
+- https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker
 
-In the project directory, you can run:
+## installation
 
-### `npm start`
+```bash
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# create a new react app
+> npx create-react-app web-app
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+> cd web-app
 
-### `npm test`
+# install required packages
+> yarn add react-router-dom react-redux @reduxjs/toolkit axios react-toastify
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
 
-### `npm run build`
+## redux
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- create a store
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```javascript
+import { configureStore } from '@reduxjs/toolkit'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+// create a new store
+export const store = configureStore({
+  reducer: {},
+})
+```
 
-### `npm run eject`
+- include the whole application in Provider Object inside index.js
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```javascript
+import { Provider } from 'react-redux'
+import { store } from './store'
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+)
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- create a slice
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
 
-## Learn More
+export const authSlice = createSlice({
+  // name of slice (must be unique)
+  name: 'auth',
+  initialState: {
+    status: false,
+  },
+  reducers: {
+    // action: action handler
+    login: (state) => {
+      state.status = true
+    },
+    // action: action handler
+    logout: (state) => {
+      state.status = false
+    },
+  },
+})
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+export const { login, logout } = authSlice.actions
+export default authSlice.reducer
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- add the slice's reducer to the store configuration
 
-### Code Splitting
+```javascript
+import { configureStore } from '@reduxjs/toolkit'
+import authSlice from './features/authSlice'
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+// create a new store
+export const store = configureStore({
+  reducer: {
+    auth: authSlice,
+  },
+})
+```
