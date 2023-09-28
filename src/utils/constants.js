@@ -1,4 +1,4 @@
 export const constants = {
-  serverUrl: 'backenddm-production.up.railway.app',
+  serverUrl: backenddm-production.up.railway.app,
 }
 
